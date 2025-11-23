@@ -1,26 +1,144 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Standard Theme Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Custom Maltopia Colors */
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-dark: var(--terracotta-dark);
+  --color-gold: var(--gold);
+  --color-brown: var(--brown);
+  --color-cream: var(--cream);
+
+  /* Custom Gradients (mapped as background images) */
+  --image-gradient-primary: var(--gradient-primary);
+  --image-gradient-hero: var(--gradient-hero);
+  --image-gradient-overlay: var(--gradient-overlay);
+
+  /* Custom Shadows */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-elevated: var(--shadow-elevated);
+
+  /* Border Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Animations */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 
+  Root Variables
+  Note: Values converted to hsl() function syntax to support 
+  Tailwind v4 opacity modifiers automatically.
+*/
+:root {
+  --radius: 0.75rem;
+
+  --background: hsl(42 47% 95%);
+  --foreground: hsl(25 35% 20%);
+
+  --card: hsl(40 40% 98%);
+  --card-foreground: hsl(25 35% 20%);
+
+  --popover: hsl(40 40% 98%);
+  --popover-foreground: hsl(25 35% 20%);
+
+  --primary: hsl(25 70% 45%);
+  --primary-foreground: hsl(42 47% 95%);
+
+  --secondary: hsl(35 60% 60%);
+  --secondary-foreground: hsl(25 35% 20%);
+
+  --muted: hsl(40 30% 88%);
+  --muted-foreground: hsl(25 20% 45%);
+
+  --accent: hsl(45 85% 65%);
+  --accent-foreground: hsl(25 35% 20%);
+
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(42 47% 95%);
+
+  --border: hsl(40 25% 85%);
+  --input: hsl(40 25% 85%);
+  --ring: hsl(25 70% 45%);
+
+  /* Custom Maltopia colors */
+  --terracotta: hsl(12 70% 62%);
+  --terracotta-dark: hsl(12 60% 45%);
+  --gold: hsl(35 85% 65%);
+  --brown: hsl(25 35% 20%);
+  --cream: hsl(42 47% 95%);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--terracotta) 0%, var(--gold) 100%);
+  --gradient-hero: linear-gradient(180deg, var(--brown) 0%, var(--terracotta-dark) 100%);
+  --gradient-overlay: linear-gradient(180deg, rgba(92, 64, 51, 0.8) 0%, rgba(224, 122, 95, 0.6) 100%);
+
+  /* Shadows */
+  --shadow-soft: 0 4px 16px hsla(25, 35%, 20%, 0.1);
+  --shadow-elevated: 0 8px 32px hsla(25, 35%, 20%, 0.15);
+}
+
+.dark {
+  --background: hsl(25 35% 12%);
+  --foreground: hsl(42 47% 95%);
+
+  --card: hsl(25 30% 15%);
+  --card-foreground: hsl(42 47% 95%);
+
+  --popover: hsl(25 30% 15%);
+  --popover-foreground: hsl(42 47% 95%);
+
+  --primary: hsl(35 85% 65%);
+  --primary-foreground: hsl(25 35% 12%);
+
+  --secondary: hsl(25 40% 25%);
+  --secondary-foreground: hsl(42 47% 95%);
+
+  --muted: hsl(25 25% 20%);
+  --muted-foreground: hsl(40 20% 60%);
+
+  --accent: hsl(12 70% 62%);
+  --accent-foreground: hsl(42 47% 95%);
+
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(42 47% 95%);
+
+  --border: hsl(25 25% 25%);
+  --input: hsl(25 25% 25%);
+  --ring: hsl(35 85% 65%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground transition-[background-color,color] duration-300 ease-smooth;
+  }
 }
