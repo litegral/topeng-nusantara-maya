@@ -52,7 +52,7 @@ const ChatbotWidget = () => {
         <Button
           onClick={() => setIsOpen(true)}
           size="lg"
-          className="h-14 w-14 rounded-full shadow-elevated bg-gradient-to-br from-terracotta to-gold hover:scale-110 transition-transform"
+          className="h-14 w-14 rounded-full shadow-elevated bg-linear-to-br from-terracotta to-gold hover:scale-110 transition-transform"
         >
           <MessageCircle className="h-6 w-6" />
         </Button>
