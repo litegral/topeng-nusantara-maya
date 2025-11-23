@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, BookOpen } from "lucide-react";
 import Image from "next/image";
 
 const stories = [
@@ -31,6 +33,14 @@ export default function ArsipPage() {
                     <div className="text-center mb-12 animate-fade-in">
                         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Arsip Cerita Topeng Malangan</h1>
                         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Dengarkan kisah-kisah legenda yang tersimpan dalam setiap topeng</p>
+                        <div className="mt-6">
+                            <Link href="/glossarium">
+                                <Button variant="outline" className="gap-2">
+                                    <BookOpen className="h-4 w-4" />
+                                    Buka Glossarium
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                     <div className="max-w-xl mx-auto mb-12">
                         <div className="relative">
