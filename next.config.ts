@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "storage.litegral.com" },
       { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "litegral.com" },
+      { protocol: "https", hostname: "koropak.co.id" },
+      { protocol: "https", hostname: "i.ytimg.com" },
+      { protocol: "https", hostname: "cdn.antaranews.com" },
+      { protocol: "https", hostname: "s3.us-east-1.wasabisys.com" },
     ],
   },
 };
