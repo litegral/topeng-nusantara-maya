@@ -58,7 +58,7 @@ export default function KatalogPage() {
             <Navbar />
             <ChatbotWidget />
 
-            <main className="pt-24 pb-16">
+            <main className="pt-30 pb-16">
                 <div className="container mx-auto px-4">
                     {/* Header Section */}
                     <div className="text-center mb-12 animate-fade-in">
