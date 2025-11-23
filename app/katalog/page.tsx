@@ -3,22 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 // Data Definition
 const topengData = [
     {
         id: 1,
-        nama: "Panji",
+        nama: "Panji Asmorobangun",
         karakter: "Ksatria muda yang bijaksana",
         warna: "Putih dan Emas",
         makna: "Kesucian dan kebijaksanaan",
         filosofi: "Melambangkan pemuda yang berbudi luhur dan penuh kasih sayang",
         imageUrl: "https://asset.museum-digital.org//media/800/id-jatim/images/201411/08083356075.jpg",
+        modelPath: "/3D/panji_asmorobangun.glb",
     },
     {
         id: 2,
@@ -28,33 +29,17 @@ const topengData = [
         makna: "Keberanian dan kekuatan",
         filosofi: "Simbol kepemimpinan yang tegas namun adil",
         imageUrl: "https://asset.museum-digital.org//media/800/id-jatim/images/201411/08091122046.jpg",
+        modelPath: "/3D/klana.glb",
     },
     {
         id: 3,
-        nama: "Gunungsari",
-        karakter: "Raksasa yang kuat",
-        warna: "Merah dan Hitam",
-        makna: "Kekuatan dan ketegasan",
-        filosofi: "Menggambarkan kekuatan yang harus dikendalikan dengan bijak",
-        imageUrl: "https://asset.museum-digital.org//media/800/id-jatim/images/201411/08100328999.jpg",
-    },
-    {
-        id: 5,
         nama: "Sekartaji",
         karakter: "Putri cantik yang anggun",
         warna: "Putih dan Pink",
         makna: "Kelembutan dan keanggunan",
         filosofi: "Melambangkan kesempurnaan feminin dalam budaya Jawa",
         imageUrl: "https://asset.museum-digital.org//media/800/id-jatim/images/201411/08081603159.jpg",
-    },
-    {
-        id: 6,
-        nama: "Panji Lembu Amiluhur",
-        karakter: "Panglima yang setia",
-        warna: "Hijau dan Emas",
-        makna: "Kesetiaan dan dedikasi",
-        filosofi: "Simbol pengabdian tanpa pamrih kepada kerajaan",
-        imageUrl: "https://asset.museum-digital.org//media/800/id-jatim/images/201411/08085041826.jpg",
+        modelPath: "/3D/sekartaji.glb",
     },
 ];
 
@@ -105,26 +90,26 @@ export default function KatalogPage() {
                         {filteredTopeng.map((topeng, index) => (
                             <div
                                 key={topeng.id}
-                                className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer animate-fade-in"
+                                className="group relative aspect-square overflow-hidden rounded-lg cursor-pointer animate-fade-in bg-background border border-border"
                                 style={{ animationDelay: `${index * 0.05}s` }}
                                 onClick={() => router.push(`/katalog/${topeng.id}`)}
                             >
-                                {/* Note: Using Next.js Image with `fill` — domain added in next.config.ts */}
+                                {/* Image */}
                                 <Image
                                     src={topeng.imageUrl}
                                     alt={topeng.nama}
                                     fill
                                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                    className="object-cover transition-transform duration-300 group-hover:scale-110"
                                 />
 
                                 {/* Overlay */}
-                                <div className="absolute inset-0 bg-linear-to-t from-brown/90 via-brown/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                                        <h3 className="text-xl font-bold text-cream">
+                                        <h3 className="text-xl font-bold text-white">
                                             {topeng.nama}
                                         </h3>
-                                        <p className="text-sm text-cream/80 mt-1">
+                                        <p className="text-sm text-white/80 mt-1">
                                             {topeng.karakter}
                                         </p>
                                     </div>
