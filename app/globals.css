@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,7 +46,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   /* Animations */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -59,45 +59,57 @@
 :root {
   --radius: 0.75rem;
 
-  --background: hsl(42 47% 95%);
+  --background: hsl(30 25% 92%);
   --foreground: hsl(25 35% 20%);
 
-  --card: hsl(40 40% 98%);
+  --card: hsl(30 20% 96%);
   --card-foreground: hsl(25 35% 20%);
 
-  --popover: hsl(40 40% 98%);
+  --popover: hsl(30 20% 96%);
   --popover-foreground: hsl(25 35% 20%);
 
-  --primary: hsl(25 70% 45%);
-  --primary-foreground: hsl(42 47% 95%);
+  --primary: hsl(25 45% 35%);
+  --primary-foreground: hsl(30 25% 92%);
 
-  --secondary: hsl(35 60% 60%);
-  --secondary-foreground: hsl(25 35% 20%);
+  --secondary: hsl(30 35% 50%);
+  --secondary-foreground: hsl(30 25% 92%);
 
-  --muted: hsl(40 30% 88%);
-  --muted-foreground: hsl(25 20% 45%);
+  --muted: hsl(30 20% 85%);
+  --muted-foreground: hsl(25 25% 40%);
 
-  --accent: hsl(45 85% 65%);
-  --accent-foreground: hsl(25 35% 20%);
+  --accent: hsl(20 40% 45%);
+  --accent-foreground: hsl(30 25% 92%);
 
   --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(42 47% 95%);
+  --destructive-foreground: hsl(30 25% 92%);
 
-  --border: hsl(40 25% 85%);
-  --input: hsl(40 25% 85%);
-  --ring: hsl(25 70% 45%);
+  --border: hsl(30 20% 80%);
+  --input: hsl(30 20% 80%);
+  --ring: hsl(25 45% 35%);
 
   /* Custom Maltopia colors */
-  --terracotta: hsl(12 70% 62%);
-  --terracotta-dark: hsl(12 60% 45%);
-  --gold: hsl(35 85% 65%);
+  --terracotta: hsl(15 50% 50%);
+  --terracotta-dark: hsl(15 45% 35%);
+  --gold: hsl(30 55% 55%);
   --brown: hsl(25 35% 20%);
-  --cream: hsl(42 47% 95%);
+  --cream: hsl(30 25% 92%);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--terracotta) 0%, var(--gold) 100%);
-  --gradient-hero: linear-gradient(180deg, var(--brown) 0%, var(--terracotta-dark) 100%);
-  --gradient-overlay: linear-gradient(180deg, rgba(92, 64, 51, 0.8) 0%, rgba(224, 122, 95, 0.6) 100%);
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--brown) 0%,
+    var(--terracotta-dark) 100%
+  );
+  --gradient-hero: linear-gradient(
+    180deg,
+    var(--brown) 0%,
+    var(--terracotta-dark) 100%
+  );
+  --gradient-overlay: linear-gradient(
+    180deg,
+    rgba(92, 64, 51, 0.8) 0%,
+    rgba(120, 80, 60, 0.7) 100%
+  );
 
   /* Shadows */
   --shadow-soft: 0 4px 16px hsla(25, 35%, 20%, 0.1);
