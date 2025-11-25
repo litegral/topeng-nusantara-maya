@@ -176,22 +176,60 @@ const AgendaDetailPage = () => {
                     </p>
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      Fasilitas
-                    </h3>
-                    <p className="text-foreground/80">
-                      {event.facilities}
-                    </p>
-                  </div>
+                  {event.facilities && (
+                    <div>
+                      <h3 className="text-xl font-semibold text-foreground mb-4">
+                        Fasilitas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {event.facilities.split(',').map((facility: string, index: number) => {
+                          const trimmedFacility = facility.trim();
+                          return (
+                            <div
+                              key={index}
+                              className="flex items-center gap-3 p-4 rounded-lg bg-linear-to-br from-terracotta/5 to-gold/5 border border-terracotta/10 hover:border-terracotta/30 hover:from-terracotta/10 hover:to-gold/10 transition-all duration-300 hover:shadow-soft group"
+                            >
+                              <div className="shrink-0 w-2 h-2 rounded-full bg-terracotta group-hover:scale-150 transition-transform duration-300" />
+                              <span className="text-foreground/90 text-sm font-medium leading-relaxed">
+                                {trimmedFacility}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
+                    <h3 className="text-xl font-semibold text-foreground mb-4">
                       Informasi Tiket
                     </h3>
-                    <p className="text-foreground/80 mb-4">
-                      {event.ticketInfo}
-                    </p>
+
+                    {/* Ticket Types Display */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                      {event.ticketTypes.map((ticketType, index) => (
+                        <div
+                          key={index}
+                          className="p-4 rounded-lg bg-linear-to-br from-terracotta/5 to-gold/5 border border-terracotta/20 hover:border-terracotta/40 transition-all duration-300 hover:shadow-soft"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="font-semibold text-foreground mb-1">{ticketType.name}</h4>
+                              <p className="text-xs text-muted-foreground">Per orang</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-bold text-terracotta">
+                                {ticketType.price === 0 ? 'GRATIS' : new Intl.NumberFormat('id-ID', {
+                                  style: 'currency',
+                                  currency: 'IDR',
+                                  minimumFractionDigits: 0,
+                                }).format(ticketType.price)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                     {/* Ticket Purchase Section */}
                     <div className="mt-6 p-6 bg-linear-to-r from-terracotta/10 to-brown/10 rounded-lg border border-terracotta/20">
@@ -201,7 +239,7 @@ const AgendaDetailPage = () => {
                       {event.ticketPrice === 0 ? (
                         <div className="space-y-4">
                           <div className="flex items-center gap-3">
-                            <Badge variant="secondary" className="text-lg py-1 px-4 bg-green-500/20 text-green-700 border-green-500/30">
+                            <Badge variant="secondary" className="text-lg py-1 px-4 bg-gold/20 text-brown border-gold/30">
                               GRATIS
                             </Badge>
                             <p className="text-muted-foreground">Acara ini gratis dan terbuka untuk umum</p>

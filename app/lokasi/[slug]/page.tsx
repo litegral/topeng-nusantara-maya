@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Phone, Globe, Calendar, Clock, Ticket, Navigation, BookOpen, Scissors } from "lucide-react";
-import { eventData as allEvents, sanggarData } from "@/data";
+import { eventData as allEvents, eventData, sanggarData } from "@/data";
 import "leaflet/dist/leaflet.css";
 
 // Dynamically import map components to avoid SSR issues
@@ -31,255 +31,6 @@ const Popup = dynamic(
   () => import("react-leaflet").then((mod) => mod.Popup),
   { ssr: false }
 );
-
-const sanggarDataOld = [
-  {
-    id: 1,
-    type: "sanggar",
-    name: "Sanggar Asmorobangun",
-    location: "Malang Kota",
-    address: "Jl. Veteran No. 12, Malang",
-    phone: "+62 341 123456",
-    website: "asmorobangun.id",
-    social: "@asmorobangun",
-    specialty: "Panji & Klana",
-    openTime: "Senin - Sabtu, 15:00 - 18:00",
-    description: "Sanggar tertua di Malang dengan spesialisasi lakon Panji dan pengembangan topeng klasik",
-    services: {
-      tariCourse: true,
-      topengWorkshop: true,
-      performances: true,
-      privateLesson: true
-    },
-    fullDescription: `Sanggar Asmorobangun didirikan pada tahun 1965 oleh almarhum Ki Soleh Adi Pramono, seorang maestro tari topeng Malangan. Sanggar ini telah menjadi pusat pembelajaran dan pelestarian seni tari topeng selama lebih dari 50 tahun.
-
-Dengan fokus pada lakon Panji dan karakter Klana, sanggar ini telah melahirkan banyak penari berbakat yang kini tersebar di berbagai daerah. Metode pengajaran yang digunakan menggabungkan teknik tradisional dengan pendekatan modern yang lebih mudah dipahami oleh generasi muda.
-
-Sanggar ini juga aktif dalam kegiatan penelitian dan dokumentasi tari topeng Malangan, bekerja sama dengan berbagai universitas dan lembaga budaya baik nasional maupun internasional.`,
-    coordinates: [-7.9666, 112.6326],
-    facilities: "Ruang latihan ber-AC, Gamelan lengkap, Perpustakaan topeng, Ruang kostum",
-    upcomingEvents: [
-      { title: "Latihan Rutin Tari Panji", date: "Setiap Rabu, 16:00", type: "Latihan" },
-      { title: "Workshop Topeng untuk Umum", date: "25 November 2024", type: "Workshop" }
-    ]
-  },
-  {
-    id: 2,
-    type: "sanggar",
-    name: "Sanggar Sido Mukti",
-    location: "Malang Selatan",
-    address: "Jl. Sulfat No. 45, Malang",
-    phone: "+62 341 234567",
-    website: "sidomukti.org",
-    social: "@sidomukti_mlg",
-    specialty: "Gunungsari & Ragil Kuning",
-    openTime: "Selasa - Minggu, 14:00 - 17:00",
-    description: "Fokus pada karakter putri dan pengajaran tari untuk anak-anak serta remaja",
-    services: {
-      tariCourse: true,
-      topengWorkshop: false,
-      performances: true,
-      privateLesson: true
-    },
-    fullDescription: `Sanggar Sido Mukti berdiri pada tahun 1980 dengan visi khusus untuk mengembangkan karakter putri dalam tari topeng Malangan. Dipimpin oleh Ibu Siti Aminah, sanggar ini dikenal dengan program pendidikan tari untuk anak-anak dan remaja.
-
-Metode pengajaran yang ramah anak membuat Sido Mukti menjadi pilihan favorit orang tua yang ingin mengenalkan seni tradisional kepada anak-anak mereka. Program khusus untuk anak usia 7-12 tahun dirancang dengan pendekatan yang menyenangkan tanpa mengurangi nilai-nilai tradisi.
-
-Sanggar ini juga rutin mengadakan pertunjukan bulanan sebagai ajang latihan untuk para murid, memberikan mereka pengalaman tampil di depan publik sejak dini.`,
-    coordinates: [-7.9797, 112.6304],
-    facilities: "Studio tari, Area bermain anak, Perpustakaan, Kantin",
-    upcomingEvents: [
-      { title: "Kelas Tari Anak", date: "Setiap Sabtu, 09:00", type: "Kelas" },
-      { title: "Pentas Bulanan", date: "30 November 2024", type: "Pertunjukan" }
-    ]
-  },
-  {
-    id: 3,
-    type: "sanggar",
-    name: "Sanggar Tumpang Rejo",
-    location: "Tumpang, Malang",
-    address: "Desa Tumpang, Kec. Tumpang, Malang",
-    phone: "+62 341 345678",
-    website: "-",
-    social: "@tumpangrejo",
-    specialty: "Ensemble & Festival",
-    openTime: "Minggu, 10:00 - 15:00",
-    description: "Sanggar komunitas yang aktif di festival dan kompetisi regional",
-    services: {
-      tariCourse: true,
-      topengWorkshop: false,
-      performances: true,
-      privateLesson: false
-    },
-    fullDescription: `Sanggar Tumpang Rejo adalah sanggar komunitas yang tumbuh dari kecintaan masyarakat Tumpang terhadap seni tradisional. Berbeda dengan sanggar lain, Tumpang Rejo lebih fokus pada pertunjukan ensemble dan partisipasi dalam festival-festival budaya.
-
-Sanggar ini terkenal dengan formasi grupnya yang kompak dan energik. Mereka sering menjuarai berbagai kompetisi tari topeng tingkat regional dan nasional. Semangat kebersamaan dan gotong royong menjadi kekuatan utama sanggar ini.
-
-Meskipun hanya berlatih pada hari Minggu, dedikasi anggota sanggar sangat tinggi. Mereka rela mengorbankan waktu istirahat untuk berlatih dan mempersiapkan pertunjukan terbaik.`,
-    coordinates: [-7.9866, 112.7145],
-    facilities: "Pendopo terbuka, Area parkir luas, Mushola",
-    upcomingEvents: [
-      { title: "Persiapan Festival Topeng", date: "Setiap Minggu", type: "Latihan" }
-    ]
-  }
-];
-
-const eventData = [
-  {
-    id: 1,
-    type: "event",
-    title: "Festival Topeng Malangan 2025",
-    date: "15 November 2025",
-    time: "09:00 - 17:00 WIB",
-    location: "Alun-alun Kota Malang",
-    address: "Jl. Tugu No. 1, Malang",
-    organizer: "Dinas Kebudayaan Kota Malang",
-    eventType: "Festival",
-    description: "Festival tahunan menampilkan 20+ sanggar dari Malang Raya",
-    fullDescription: `Festival Topeng Malangan adalah acara budaya tahunan terbesar di Malang yang mempertemukan lebih dari 20 sanggar dari seluruh Malang Raya. Festival ini telah menjadi agenda wajib bagi pecinta seni tradisional di Jawa Timur.
-
-Acara ini menampilkan berbagai pertunjukan tari topeng dari berbagai sanggar, workshop, pameran topeng dan kostum, serta bazaar kuliner dan kerajinan tradisional. Pengunjung dapat menikmati pertunjukan sambil belajar tentang sejarah dan filosofi tari topeng Malangan.
-
-Festival ini juga menjadi ajang kompetisi bergengsi bagi sanggar-sanggar untuk menunjukkan karya terbaik mereka. Pemenang akan mendapatkan penghargaan dan kesempatan untuk tampil di acara-acara nasional.`,
-    facilities: "Panggung utama, Area workshop, Booth pameran, Food court",
-    ticketPrice: 50000,
-    ticketInfo: "Reguler: Rp 50.000 | VIP: Rp 100.000",
-    contact: "+62 341 363636",
-    registrationUrl: "https://example.com/register/festival-topeng-2025"
-  },
-  {
-    id: 2,
-    type: "event",
-    title: "Workshop Pembuatan Topeng",
-    date: "20 November 2025",
-    time: "13:00 - 17:00 WIB",
-    location: "Sanggar Asmorobangun",
-    address: "Jl. Veteran No. 12, Malang",
-    organizer: "Sanggar Asmorobangun",
-    eventType: "Workshop",
-    description: "Belajar membuat topeng dari pengrajin berpengalaman",
-    fullDescription: `Workshop khusus yang mengajarkan teknik pembuatan topeng Malangan secara tradisional. Dipandu langsung oleh Ki Sarno, pengrajin topeng dengan pengalaman lebih dari 40 tahun.
-
-Peserta akan belajar mulai dari pemilihan bahan, pembentukan dasar topeng, penghalusan, hingga teknik pengecatan tradisional. Workshop ini cocok untuk siapa saja yang tertarik dengan kerajinan tangan dan ingin mempelajari seni membuat topeng.
-
-Setiap peserta akan membawa pulang satu topeng hasil karya sendiri. Workshop ini dibatasi untuk 30 peserta saja untuk memastikan setiap peserta mendapat bimbingan yang maksimal.`,
-    facilities: "Ruang workshop, Peralatan lengkap, Bahan-bahan, Snack & minuman",
-    ticketPrice: 150000,
-    ticketInfo: "Rp 150.000/peserta (termasuk bahan dan topeng)",
-    contact: "+62 341 123456",
-    registrationUrl: "https://example.com/register/workshop-topeng"
-  },
-  {
-    id: 3,
-    type: "event",
-    title: "Pentas Seni Bulanan",
-    date: "25 November 2025",
-    time: "19:00 - 21:00 WIB",
-    location: "Pendopo Kabupaten Malang",
-    address: "Jl. Panji No. 1, Kepanjen, Malang",
-    organizer: "Komunitas Seni Malang",
-    eventType: "Pertunjukan",
-    description: "Pertunjukan rutin menampilkan berbagai sanggar lokal",
-    fullDescription: `Pentas Seni Bulanan adalah acara rutin yang diselenggarakan setiap akhir bulan sebagai wadah untuk sanggar-sanggar kecil dan menengah untuk menampilkan karya mereka. Acara ini gratis dan terbuka untuk umum.
-
-Setiap edisi menampilkan 3-5 sanggar dengan lakon dan karakter yang berbeda-beda. Acara ini memberikan kesempatan bagi penari pemula untuk tampil dan mendapat pengalaman panggung yang berharga.
-
-Suasana yang informal dan ramah membuat acara ini cocok untuk seluruh keluarga. Penonton dapat berinteraksi langsung dengan para penari setelah pertunjukan untuk bertanya dan berdiskusi tentang tari topeng.`,
-    facilities: "Panggung indoor, Tempat duduk 200 orang, Parkir gratis",
-    ticketPrice: 25000,
-    ticketInfo: "Umum: Rp 25.000 | Pelajar: Rp 15.000",
-    contact: "+62 341 456789",
-    registrationUrl: "https://example.com/register/pentas-seni"
-  },
-  {
-    id: 4,
-    type: "event",
-    title: "Pelatihan Tari Topeng Pemula",
-    date: "5 Desember 2025",
-    time: "14:00 - 17:00 WIB",
-    location: "Sanggar Sido Mukti",
-    address: "Jl. Sulfat No. 45, Malang",
-    organizer: "Sanggar Sido Mukti",
-    eventType: "Workshop",
-    description: "Workshop khusus untuk pemula yang ingin belajar tari topeng",
-    fullDescription: `Program pelatihan intensif untuk pemula yang ingin mempelajari tari topeng Malangan dari dasar. Dipandu oleh instruktur berpengalaman dari Sanggar Sido Mukti yang telah mengajar puluhan siswa.
-
-Pelatihan ini mencakup dasar-dasar gerak tari, filosofi setiap karakter topeng, dan latihan praktis menggunakan topeng. Peserta tidak perlu memiliki latar belakang tari sebelumnya.
-
-Setiap peserta akan mendapatkan modul pembelajaran dan kesempatan untuk terus berlatih di sanggar setelah workshop selesai. Kapasitas terbatas hanya 25 orang.`,
-    facilities: "Studio tari ber-AC, Topeng latihan, Gamelan, Dokumentasi video",
-    ticketPrice: 100000,
-    ticketInfo: "Rp 100.000/peserta",
-    contact: "+62 341 234567",
-    registrationUrl: "https://example.com/register/pelatihan-pemula"
-  },
-  {
-    id: 5,
-    type: "event",
-    title: "Pameran Topeng Nusantara",
-    date: "12 Desember 2025",
-    time: "10:00 - 18:00 WIB",
-    location: "Museum Malang",
-    address: "Jl. Ijen No. 25A, Malang",
-    organizer: "Dinas Pariwisata Malang",
-    eventType: "Pameran",
-    description: "Pameran koleksi topeng dari berbagai daerah di Indonesia",
-    fullDescription: `Pameran spesial yang menampilkan lebih dari 200 koleksi topeng dari berbagai daerah di Indonesia. Mulai dari topeng Malangan, Cirebon, Bali, Papua, hingga topeng kontemporer karya seniman muda.
-
-Pameran ini memberikan insight mendalam tentang keragaman budaya Indonesia melalui seni topeng. Setiap topeng memiliki cerita dan filosofi yang unik. Dilengkapi dengan audio guide dan pemandu ahli.
-
-Cocok untuk pelajar, peneliti, dan siapa saja yang ingin mengenal kekayaan budaya Indonesia. Pameran ini juga menjual replika topeng dan merchandise khusus.`,
-    facilities: "Ruang pameran ber-AC, Audio guide, Cafe, Souvenir shop, Parkir luas",
-    ticketPrice: 20000,
-    ticketInfo: "Umum: Rp 20.000 | Pelajar: Rp 10.000",
-    contact: "+62 341 567890",
-    registrationUrl: "https://example.com/register/pameran-topeng"
-  },
-  {
-    id: 6,
-    type: "event",
-    title: "Latihan Terbuka Tari Topeng",
-    date: "18 November 2025",
-    time: "16:00 - 18:00 WIB",
-    location: "Sanggar Asmorobangun",
-    address: "Jl. Veteran No. 12, Malang",
-    organizer: "Sanggar Asmorobangun",
-    eventType: "Workshop",
-    description: "Sesi latihan terbuka untuk umum, gratis untuk menonton",
-    fullDescription: `Sesi latihan terbuka yang mempersilakan masyarakat umum untuk datang dan menonton proses latihan tari topeng secara langsung. Ini adalah kesempatan langka untuk melihat bagaimana para penari berlatih dan berinteraksi dengan instruktur.
-
-Pengunjung dapat melihat teknik-teknik latihan, koreksi gerakan, dan proses pembelajaran yang biasanya hanya bisa dilihat oleh anggota sanggar. Setelah sesi latihan, pengunjung dapat bertanya dan berdiskusi dengan para penari.
-
-Acara ini gratis dan tidak memerlukan pendaftaran sebelumnya. Cocok untuk siapa saja yang penasaran dengan dunia tari topeng atau sedang mempertimbangkan untuk belajar tari.`,
-    facilities: "Ruang latihan terbuka, Tempat duduk penonton, Toilet, Area parkir",
-    ticketPrice: 0,
-    ticketInfo: "GRATIS - Tidak perlu pendaftaran",
-    contact: "+62 341 123456",
-    registrationUrl: null
-  },
-  {
-    id: 7,
-    type: "event",
-    title: "Pertunjukan Wayang Topeng",
-    date: "28 November 2025",
-    time: "19:30 - 22:00 WIB",
-    location: "Gedung Kesenian Malang",
-    address: "Jl. Kawi No. 1, Malang",
-    organizer: "Dinas Kebudayaan",
-    eventType: "Pertunjukan",
-    description: "Pertunjukan wayang topeng oleh dalang terkenal",
-    fullDescription: `Pertunjukan spesial wayang topeng yang mengangkat lakon Panji Asmarabangun. Dipentaskan oleh dalang terkenal Ki Warseno yang telah malang melintang di dunia pewayangan selama 35 tahun.
-
-Wayang topeng menggabungkan unsur tari, musik gamelan, dan narasi yang kuat. Pertunjukan ini menghadirkan pengalaman teatrikal yang memukau dengan kostum dan topeng yang indah.
-
-Acara ini dilengkapi dengan terjemahan bahasa Indonesia untuk memudahkan pemahaman cerita. Sangat direkomendasikan untuk keluarga dan pencinta seni pertunjukan tradisional.`,
-    facilities: "Teater ber-AC, Tempat duduk 500 orang, Sound system profesional, Lighting modern",
-    ticketPrice: 35000,
-    ticketInfo: "Reguler: Rp 35.000 | VIP: Rp 75.000",
-    contact: "+62 341 678901",
-    registrationUrl: "https://example.com/register/wayang-topeng"
-  }
-];
 
 const LokasiDetail = () => {
   const params = useParams();
@@ -419,25 +170,25 @@ const LokasiDetail = () => {
                             Layanan Tersedia:
                           </h3>
                           {(item as any).services.tariCourse && (
-                            <Badge className="bg-emerald-500/20 text-emerald-700 border-emerald-500/30 hover:bg-emerald-500/30">
+                            <Badge variant="secondary" className="bg-terracotta/10 text-terracotta-dark border-terracotta/20 hover:bg-terracotta/20">
                               <BookOpen className="h-3 w-3 mr-1" />
                               Kursus Tari Topeng
                             </Badge>
                           )}
                           {(item as any).services.topengWorkshop && (
-                            <Badge className="bg-purple-500/20 text-purple-700 border-purple-500/30 hover:bg-purple-500/30">
+                            <Badge variant="secondary" className="bg-brown/10 text-brown border-brown/20 hover:bg-brown/20">
                               <Scissors className="h-3 w-3 mr-1" />
                               Workshop Membuat Topeng
                             </Badge>
                           )}
                           {(item as any).services.performances && (
-                            <Badge className="bg-orange-500/20 text-orange-700 border-orange-500/30 hover:bg-orange-500/30">
+                            <Badge variant="secondary" className="bg-gold/10 text-brown border-gold/20 hover:bg-gold/20">
                               <Calendar className="h-3 w-3 mr-1" />
                               Pertunjukan Reguler
                             </Badge>
                           )}
                           {(item as any).services.privateLesson && (
-                            <Badge className="bg-blue-500/20 text-blue-700 border-blue-500/30 hover:bg-blue-500/30">
+                            <Badge variant="secondary" className="bg-terracotta-dark/10 text-terracotta-dark border-terracotta-dark/20 hover:bg-terracotta-dark/20">
                               <BookOpen className="h-3 w-3 mr-1" />
                               Les Privat
                             </Badge>
@@ -513,24 +264,62 @@ const LokasiDetail = () => {
                     </p>
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      Fasilitas
-                    </h3>
-                    <p className="text-foreground/80">
-                      {(item as any).facilities}
-                    </p>
-                  </div>
+                  {(item as any).facilities && (
+                    <div>
+                      <h3 className="text-xl font-semibold text-foreground mb-4">
+                        Fasilitas
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {(item as any).facilities.split(',').map((facility: string, index: number) => {
+                          const trimmedFacility = facility.trim();
+                          return (
+                            <div
+                              key={index}
+                              className="flex items-center gap-3 p-4 rounded-lg bg-linear-to-br from-terracotta/5 to-gold/5 border border-terracotta/10 hover:border-terracotta/30 hover:from-terracotta/10 hover:to-gold/10 transition-all duration-300 hover:shadow-soft group"
+                            >
+                              <div className="shrink-0 w-2 h-2 rounded-full bg-terracotta group-hover:scale-150 transition-transform duration-300" />
+                              <span className="text-foreground/90 text-sm font-medium leading-relaxed">
+                                {trimmedFacility}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   {!isSanggar && (
                     <>
                       <div>
-                        <h3 className="text-xl font-semibold text-foreground mb-3">
+                        <h3 className="text-xl font-semibold text-foreground mb-4">
                           Informasi Tiket
                         </h3>
-                        <p className="text-foreground/80">
-                          {(item as any).ticketInfo}
-                        </p>
+
+                        {/* Ticket Types Display */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                          {(item as any).ticketTypes.map((ticketType: any, index: number) => (
+                            <div
+                              key={index}
+                              className="p-4 rounded-lg bg-linear-to-br from-terracotta/5 to-gold/5 border border-terracotta/20 hover:border-terracotta/40 transition-all duration-300 hover:shadow-soft"
+                            >
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h4 className="font-semibold text-foreground mb-1">{ticketType.name}</h4>
+                                  <p className="text-xs text-muted-foreground">Per orang</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-2xl font-bold text-terracotta">
+                                    {ticketType.price === 0 ? 'GRATIS' : new Intl.NumberFormat('id-ID', {
+                                      style: 'currency',
+                                      currency: 'IDR',
+                                      minimumFractionDigits: 0,
+                                    }).format(ticketType.price)}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Registration Section */}
@@ -541,7 +330,7 @@ const LokasiDetail = () => {
                         {(item as any).ticketPrice === 0 ? (
                           <div className="space-y-4">
                             <div className="flex items-center gap-3">
-                              <Badge variant="secondary" className="text-lg py-1 px-4 bg-green-500/20 text-green-700 border-green-500/30">
+                              <Badge variant="secondary" className="text-lg py-1 px-4 bg-gold/20 text-brown border-gold/30">
                                 GRATIS
                               </Badge>
                               <p className="text-muted-foreground">Acara ini gratis dan terbuka untuk umum</p>
