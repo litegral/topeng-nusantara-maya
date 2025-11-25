@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, Clock } from "lucide-react";
 import "leaflet/dist/leaflet.css";
+import { sanggarData } from "@/data";
 
 // Dynamically import map components to avoid SSR issues with Leaflet
 const MapContainer = dynamic(
@@ -29,59 +30,6 @@ const Popup = dynamic(
   () => import("react-leaflet").then((mod) => mod.Popup),
   { ssr: false }
 );
-
-const sanggarData = [
-  {
-    id: 1,
-    name: "Sanggar Asmorobangun",
-    location: "Malang Kota",
-    address: "Jl. Veteran No. 12, Malang",
-    phone: "+62 341 123456",
-    website: "asmorobangun.id",
-    social: "@asmorobangun",
-    specialty: "Panji & Klana",
-    openTime: "Senin - Sabtu, 15:00 - 18:00",
-    description: "Sanggar tertua di Malang dengan spesialisasi lakon Panji dan pengembangan topeng klasik",
-    coordinates: [-7.9666, 112.6326] as [number, number],
-    upcomingEvents: [
-      { title: "Latihan Rutin Tari Panji", date: "Setiap Rabu, 16:00" },
-      { title: "Workshop Topeng untuk Umum", date: "25 November 2024" }
-    ]
-  },
-  {
-    id: 2,
-    name: "Sanggar Sido Mukti",
-    location: "Malang Selatan",
-    address: "Jl. Sulfat No. 45, Malang",
-    phone: "+62 341 234567",
-    website: "sidomukti.org",
-    social: "@sidomukti_mlg",
-    specialty: "Gunungsari & Ragil Kuning",
-    openTime: "Selasa - Minggu, 14:00 - 17:00",
-    description: "Fokus pada karakter putri dan pengajaran tari untuk anak-anak serta remaja",
-    coordinates: [-7.9797, 112.6304] as [number, number],
-    upcomingEvents: [
-      { title: "Kelas Tari Anak", date: "Setiap Sabtu, 09:00" },
-      { title: "Pentas Bulanan", date: "30 November 2024" }
-    ]
-  },
-  {
-    id: 3,
-    name: "Sanggar Tumpang Rejo",
-    location: "Tumpang, Malang",
-    address: "Desa Tumpang, Kec. Tumpang, Malang",
-    phone: "+62 341 345678",
-    website: "-",
-    social: "@tumpangrejo",
-    specialty: "Ensemble & Festival",
-    openTime: "Minggu, 10:00 - 15:00",
-    description: "Sanggar komunitas yang aktif di festival dan kompetisi regional",
-    coordinates: [-7.9866, 112.7145] as [number, number],
-    upcomingEvents: [
-      { title: "Persiapan Festival Topeng", date: "Setiap Minggu" }
-    ]
-  }
-];
 
 const LokasiPage = () => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,17 +1,38 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MapPin, Phone, Globe, Calendar, Clock, Ticket } from "lucide-react";
-import { eventData as allEvents } from "@/lib/events-data";
+import { ArrowLeft, MapPin, Phone, Globe, Calendar, Clock, Ticket, Navigation, BookOpen, Scissors } from "lucide-react";
+import { eventData as allEvents, sanggarData } from "@/data";
+import "leaflet/dist/leaflet.css";
 
-const sanggarData = [
+// Dynamically import map components to avoid SSR issues
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+const sanggarDataOld = [
   {
     id: 1,
     type: "sanggar",
@@ -24,6 +45,12 @@ const sanggarData = [
     specialty: "Panji & Klana",
     openTime: "Senin - Sabtu, 15:00 - 18:00",
     description: "Sanggar tertua di Malang dengan spesialisasi lakon Panji dan pengembangan topeng klasik",
+    services: {
+      tariCourse: true,
+      topengWorkshop: true,
+      performances: true,
+      privateLesson: true
+    },
     fullDescription: `Sanggar Asmorobangun didirikan pada tahun 1965 oleh almarhum Ki Soleh Adi Pramono, seorang maestro tari topeng Malangan. Sanggar ini telah menjadi pusat pembelajaran dan pelestarian seni tari topeng selama lebih dari 50 tahun.
 
 Dengan fokus pada lakon Panji dan karakter Klana, sanggar ini telah melahirkan banyak penari berbakat yang kini tersebar di berbagai daerah. Metode pengajaran yang digunakan menggabungkan teknik tradisional dengan pendekatan modern yang lebih mudah dipahami oleh generasi muda.
@@ -48,6 +75,12 @@ Sanggar ini juga aktif dalam kegiatan penelitian dan dokumentasi tari topeng Mal
     specialty: "Gunungsari & Ragil Kuning",
     openTime: "Selasa - Minggu, 14:00 - 17:00",
     description: "Fokus pada karakter putri dan pengajaran tari untuk anak-anak serta remaja",
+    services: {
+      tariCourse: true,
+      topengWorkshop: false,
+      performances: true,
+      privateLesson: true
+    },
     fullDescription: `Sanggar Sido Mukti berdiri pada tahun 1980 dengan visi khusus untuk mengembangkan karakter putri dalam tari topeng Malangan. Dipimpin oleh Ibu Siti Aminah, sanggar ini dikenal dengan program pendidikan tari untuk anak-anak dan remaja.
 
 Metode pengajaran yang ramah anak membuat Sido Mukti menjadi pilihan favorit orang tua yang ingin mengenalkan seni tradisional kepada anak-anak mereka. Program khusus untuk anak usia 7-12 tahun dirancang dengan pendekatan yang menyenangkan tanpa mengurangi nilai-nilai tradisi.
@@ -72,6 +105,12 @@ Sanggar ini juga rutin mengadakan pertunjukan bulanan sebagai ajang latihan untu
     specialty: "Ensemble & Festival",
     openTime: "Minggu, 10:00 - 15:00",
     description: "Sanggar komunitas yang aktif di festival dan kompetisi regional",
+    services: {
+      tariCourse: true,
+      topengWorkshop: false,
+      performances: true,
+      privateLesson: false
+    },
     fullDescription: `Sanggar Tumpang Rejo adalah sanggar komunitas yang tumbuh dari kecintaan masyarakat Tumpang terhadap seni tradisional. Berbeda dengan sanggar lain, Tumpang Rejo lebih fokus pada pertunjukan ensemble dan partisipasi dalam festival-festival budaya.
 
 Sanggar ini terkenal dengan formasi grupnya yang kompak dan energik. Mereka sering menjuarai berbagai kompetisi tari topeng tingkat regional dan nasional. Semangat kebersamaan dan gotong royong menjadi kekuatan utama sanggar ini.
@@ -246,6 +285,7 @@ const LokasiDetail = () => {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
+  const [leafletLoaded, setLeafletLoaded] = useState(false);
 
   // Parse slug to get type and id (format: sanggar-1 or event-1)
   const [type, idStr] = slug.split('-');
@@ -254,6 +294,21 @@ const LokasiDetail = () => {
   const item = type === "sanggar"
     ? sanggarData.find(s => s.id === id)
     : eventData.find(e => e.id === id);
+
+  // Setup Leaflet icons (only on client)
+  useEffect(() => {
+    if (typeof window !== "undefined" && !leafletLoaded) {
+      import("leaflet").then((L) => {
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+          iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+          shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+        });
+        setLeafletLoaded(true);
+      });
+    }
+  }, [leafletLoaded]);
 
   if (!item) {
     return (
@@ -264,11 +319,25 @@ const LokasiDetail = () => {
   }
 
   const isSanggar = type === "sanggar";
+  const sanggar = isSanggar ? item : null;
 
   // Get events related to this sanggar location
   const relatedEvents = isSanggar
     ? allEvents.filter(event => event.location === (item as any).name)
     : [];
+
+  // Get coordinates for map
+  const coordinates = isSanggar && sanggar
+    ? (sanggar as any).coordinates
+    : null;
+
+  // Function to open Google Maps directions
+  const openDirections = () => {
+    if (coordinates) {
+      const [lat, lng] = coordinates;
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -287,6 +356,47 @@ const LokasiDetail = () => {
           </Button>
 
           <div className="animate-fade-in space-y-6">
+            {/* Map Section (for sanggar only) */}
+            {isSanggar && coordinates && (
+              <Card className="overflow-hidden p-0">
+                <div className="h-[300px] relative">
+                  {leafletLoaded && (
+                    <MapContainer
+                      center={coordinates as [number, number]}
+                      zoom={15}
+                      style={{ height: "100%", width: "100%" }}
+                      scrollWheelZoom={false}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <Marker position={coordinates as [number, number]}>
+                        <Popup>
+                          <div className="p-2">
+                            <h3 className="font-bold text-sm mb-1">{(item as any).name}</h3>
+                            <p className="text-xs text-muted-foreground">{(item as any).address}</p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    </MapContainer>
+                  )}
+
+                  {/* Directions Button Overlay */}
+                  <div className="absolute bottom-4 right-4 z-1000">
+                    <Button
+                      onClick={openDirections}
+                      className="shadow-lg"
+                      size="sm"
+                    >
+                      <Navigation className="h-4 w-4 mr-2" />
+                      Petunjuk Arah
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             <Card>
               <CardContent className="p-8">
                 <div className="mb-6">
@@ -297,9 +407,44 @@ const LokasiDetail = () => {
                     {isSanggar ? (item as any).name : (item as any).title}
                   </h1>
                   {isSanggar && (
-                    <p className="text-lg text-muted-foreground mb-4">
-                      {(item as any).description}
-                    </p>
+                    <>
+                      <p className="text-lg text-muted-foreground mb-4">
+                        {(item as any).description}
+                      </p>
+
+                      {/* Service Status Badges */}
+                      {(item as any).services && (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <h3 className="w-full text-sm font-semibold text-foreground mb-1">
+                            Layanan Tersedia:
+                          </h3>
+                          {(item as any).services.tariCourse && (
+                            <Badge className="bg-emerald-500/20 text-emerald-700 border-emerald-500/30 hover:bg-emerald-500/30">
+                              <BookOpen className="h-3 w-3 mr-1" />
+                              Kursus Tari Topeng
+                            </Badge>
+                          )}
+                          {(item as any).services.topengWorkshop && (
+                            <Badge className="bg-purple-500/20 text-purple-700 border-purple-500/30 hover:bg-purple-500/30">
+                              <Scissors className="h-3 w-3 mr-1" />
+                              Workshop Membuat Topeng
+                            </Badge>
+                          )}
+                          {(item as any).services.performances && (
+                            <Badge className="bg-orange-500/20 text-orange-700 border-orange-500/30 hover:bg-orange-500/30">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              Pertunjukan Reguler
+                            </Badge>
+                          )}
+                          {(item as any).services.privateLesson && (
+                            <Badge className="bg-blue-500/20 text-blue-700 border-blue-500/30 hover:bg-blue-500/30">
+                              <BookOpen className="h-3 w-3 mr-1" />
+                              Les Privat
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 

@@ -22,7 +22,7 @@ import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { id } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { eventData as culturalEvents } from "@/lib/events-data";
+import { eventData as culturalEvents } from "@/data";
 
 const locales = {
   'id': id,

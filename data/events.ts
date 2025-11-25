@@ -1,4 +1,32 @@
-export const eventData = [
+// Cultural events data
+export interface TicketType {
+  name: string;
+  price: number;
+}
+
+export interface Event {
+  id: number;
+  type: "event";
+  title: string;
+  date: string;
+  dateObj: Date;
+  time: string;
+  location: string;
+  address: string;
+  organizer: string;
+  eventType: string;
+  description: string;
+  fullDescription: string;
+  facilities: string;
+  ticketPrice: number;
+  ticketInfo: string;
+  contact: string;
+  registrationUrl: string | null;
+  availableTickets: number;
+  ticketTypes: TicketType[];
+}
+
+export const eventData: Event[] = [
   {
     id: 1,
     type: "event",

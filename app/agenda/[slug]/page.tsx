@@ -28,7 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { eventData } from "@/lib/events-data";
+import { eventData } from "@/data";
 
 const AgendaDetailPage = () => {
   const params = useParams();
