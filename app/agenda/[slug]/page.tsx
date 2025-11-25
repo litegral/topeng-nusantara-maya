@@ -46,6 +46,12 @@ const AgendaDetailPage = () => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [isPurchaseComplete, setIsPurchaseComplete] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<'form' | 'method' | 'processing' | 'instructions' | 'success'>('form');
+  const [paymentType, setPaymentType] = useState<'bank_transfer' | 'gopay' | 'shopeepay' | ''>('');
+  const [selectedBank, setSelectedBank] = useState<'bca' | 'bni' | 'bri' | 'permata' | 'cimb'>('bca');
+  const [paymentData, setPaymentData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
 
   if (!event) {
     return (
@@ -59,6 +65,9 @@ const AgendaDetailPage = () => {
     setSelectedTicketType(0);
     setTicketQuantity(1);
     setIsPurchaseComplete(false);
+    setPaymentStep('form');
+    setPaymentType('');
+    setPaymentError('');
     setIsTicketDialogOpen(true);
   };
 
@@ -69,6 +78,10 @@ const AgendaDetailPage = () => {
     setCustomerPhone("");
     setTicketQuantity(1);
     setIsPurchaseComplete(false);
+    setPaymentStep('form');
+    setPaymentType('');
+    setPaymentData(null);
+    setPaymentError('');
   };
 
   const handleQuantityChange = (delta: number) => {
@@ -80,7 +93,90 @@ const AgendaDetailPage = () => {
 
   const handlePurchase = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsPurchaseComplete(true);
+    setPaymentStep('method');
+  };
+
+  const handlePaymentMethodSelect = async () => {
+    if (!paymentType) {
+      setPaymentError('Pilih metode pembayaran terlebih dahulu');
+      return;
+    }
+
+    setIsLoading(true);
+    setPaymentError('');
+    setPaymentStep('processing');
+
+    try {
+      // Generate unique order ID
+      const orderId = `ORDER-${event.id}-${Date.now()}`;
+      const amount = calculateTotal();
+
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          amount,
+          paymentType,
+          paymentMethod: paymentType === 'bank_transfer' ? selectedBank : undefined,
+          customerDetails: {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Gagal membuat pembayaran');
+      }
+
+      setPaymentData(result.data);
+
+      // For e-money, check if it's mobile and redirect
+      if ((paymentType === 'gopay' || paymentType === 'shopeepay') && result.data.actions) {
+        const deeplinkAction = result.data.actions.find((action: any) =>
+          action.name === 'deeplink-redirect'
+        );
+
+        // Check if mobile device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile && deeplinkAction) {
+          // Redirect to payment app
+          window.location.href = deeplinkAction.url;
+          return;
+        }
+      }
+
+      setPaymentStep('instructions');
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      setPaymentError(error.message || 'Terjadi kesalahan saat membuat pembayaran');
+      setPaymentStep('method');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const checkPaymentStatus = async () => {
+    if (!paymentData?.order_id) return;
+
+    try {
+      const response = await fetch(`/api/payment/status/${paymentData.order_id}`);
+      const result = await response.json();
+
+      if (result.success && result.data.transaction_status === 'settlement') {
+        setPaymentStep('success');
+        setIsPurchaseComplete(true);
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -292,7 +388,7 @@ const AgendaDetailPage = () => {
       {/* Ticket Purchase Dialog */}
       <Dialog open={isTicketDialogOpen} onOpenChange={setIsTicketDialogOpen}>
         <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-          {!isPurchaseComplete ? (
+          {paymentStep === 'form' && (
             <>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
@@ -454,7 +550,232 @@ const AgendaDetailPage = () => {
                 </div>
               </form>
             </>
-          ) : (
+          )}
+
+          {/* Payment Method Selection */}
+          {paymentStep === 'method' && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Ticket className="h-5 w-5 text-terracotta" />
+                  Pilih Metode Pembayaran
+                </DialogTitle>
+                <DialogDescription>
+                  Pilih metode pembayaran yang Anda inginkan
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                {/* Order Summary */}
+                <div className="bg-linear-to-br from-terracotta/10 to-brown/5 rounded-lg p-4 border border-terracotta/20">
+                  <h4 className="font-semibold mb-2 text-sm">Ringkasan Pesanan</h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">{event.ticketTypes[selectedTicketType].name}</span>
+                      <span className="font-medium">{ticketQuantity}x</span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-terracotta/20">
+                      <span className="font-semibold">Total</span>
+                      <span className="font-bold text-terracotta">{formatCurrency(calculateTotal())}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {paymentError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-900">
+                    {paymentError}
+                  </div>
+                )}
+
+                {/* Bank Transfer */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">Transfer Bank</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['bca', 'bni', 'bri', 'mandiri'].map((bank) => (
+                      <button
+                        key={bank}
+                        type="button"
+                        onClick={() => {
+                          setPaymentType('bank_transfer');
+                          setSelectedBank(bank as any);
+                        }}
+                        className={`p-3 rounded-lg border-2 text-center font-medium uppercase transition-all ${
+                          paymentType === 'bank_transfer' && selectedBank === bank
+                            ? 'border-terracotta bg-terracotta/5'
+                            : 'border-border hover:border-terracotta/50'
+                        }`}
+                      >
+                        {bank}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* E-Wallet */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">E-Wallet</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentType('gopay')}
+                      className={`p-3 rounded-lg border-2 text-center font-medium transition-all ${
+                        paymentType === 'gopay'
+                          ? 'border-terracotta bg-terracotta/5'
+                          : 'border-border hover:border-terracotta/50'
+                      }`}
+                    >
+                      GoPay / QRIS
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentType('shopeepay')}
+                      className={`p-3 rounded-lg border-2 text-center font-medium transition-all ${
+                        paymentType === 'shopeepay'
+                          ? 'border-terracotta bg-terracotta/5'
+                          : 'border-border hover:border-terracotta/50'
+                      }`}
+                    >
+                      ShopeePay
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setPaymentStep('form')}
+                    className="flex-1"
+                  >
+                    Kembali
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handlePaymentMethodSelect}
+                    disabled={!paymentType || isLoading}
+                    className="flex-1 bg-linear-to-r from-terracotta to-brown hover:from-terracotta/90 hover:to-brown/90 text-cream"
+                  >
+                    {isLoading ? 'Memproses...' : 'Lanjutkan'}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Processing */}
+          {paymentStep === 'processing' && (
+            <div className="text-center py-12">
+              <div className="mb-4 flex justify-center">
+                <div className="w-16 h-16 border-4 border-terracotta/30 border-t-terracotta rounded-full animate-spin" />
+              </div>
+              <p className="text-lg font-medium">Membuat pembayaran...</p>
+              <p className="text-sm text-muted-foreground mt-2">Mohon tunggu sebentar</p>
+            </div>
+          )}
+
+          {/* Payment Instructions */}
+          {paymentStep === 'instructions' && paymentData && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Instruksi Pembayaran</DialogTitle>
+                <DialogDescription>
+                  Selesaikan pembayaran untuk mengaktifkan tiket Anda
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                {/* Bank Transfer Instructions */}
+                {paymentType === 'bank_transfer' && paymentData.va_numbers && (
+                  <>
+                    <div className="bg-linear-to-br from-terracotta/10 to-brown/5 rounded-lg p-6 border border-terracotta/20">
+                      <h4 className="font-semibold mb-4 text-center">Nomor Virtual Account</h4>
+                      <div className="bg-white rounded-lg p-4 mb-4">
+                        <p className="text-xs text-muted-foreground text-center mb-2">
+                          {paymentData.va_numbers[0].bank.toUpperCase()}
+                        </p>
+                        <p className="text-2xl font-bold text-center tracking-wider">
+                          {paymentData.va_numbers[0].va_number}
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Total Pembayaran</span>
+                        <span className="text-xl font-bold text-terracotta">
+                          {formatCurrency(parseInt(paymentData.gross_amount))}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                      <p className="font-semibold mb-2">Cara Pembayaran:</p>
+                      <ol className="list-decimal list-inside space-y-1 text-blue-900">
+                        <li>Buka aplikasi mobile banking atau ATM</li>
+                        <li>Pilih menu transfer ke Virtual Account</li>
+                        <li>Masukkan nomor VA di atas</li>
+                        <li>Masukkan jumlah yang harus dibayar</li>
+                        <li>Konfirmasi pembayaran</li>
+                      </ol>
+                    </div>
+                  </>
+                )}
+
+                {/* E-Money Instructions (QR Code) */}
+                {(paymentType === 'gopay' || paymentType === 'shopeepay') && paymentData.actions && (
+                  <>
+                    {paymentData.actions.find((a: any) => a.name === 'generate-qr-code') && (
+                      <div className="bg-linear-to-br from-terracotta/10 to-brown/5 rounded-lg p-6 border border-terracotta/20">
+                        <h4 className="font-semibold mb-4 text-center">Scan QR Code</h4>
+                        <div className="flex justify-center mb-4">
+                          <img
+                            src={paymentData.actions.find((a: any) => a.name === 'generate-qr-code').url}
+                            alt="QR Code"
+                            className="w-48 h-48 border-4 border-white rounded-lg"
+                          />
+                        </div>
+                        <p className="text-sm text-center text-muted-foreground">
+                          Scan dengan aplikasi {paymentType === 'gopay' ? 'GoPay/Gojek atau aplikasi QRIS lainnya' : 'ShopeePay'}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center bg-white rounded-lg p-4 border">
+                      <span className="text-sm text-muted-foreground">Total Pembayaran</span>
+                      <span className="text-xl font-bold text-terracotta">
+                        {formatCurrency(parseInt(paymentData.gross_amount))}
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-900">
+                  <p className="font-medium mb-1">⏱️ Selesaikan pembayaran sebelum:</p>
+                  <p className="font-bold">
+                    {paymentData.expiry_time && new Date(paymentData.expiry_time).toLocaleString('id-ID')}
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={checkPaymentStatus}
+                    className="flex-1"
+                  >
+                    Cek Status Pembayaran
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={handleCloseTicketDialog}
+                    className="flex-1 bg-linear-to-r from-terracotta to-brown hover:from-terracotta/90 hover:to-brown/90 text-cream"
+                  >
+                    Tutup
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Payment Success */}
+          {paymentStep === 'success' && (
             <>
               <div className="text-center py-8">
                 <div className="mb-6 flex justify-center">
@@ -463,9 +784,9 @@ const AgendaDetailPage = () => {
                   </div>
                 </div>
 
-                <DialogTitle className="text-2xl mb-2">Pembelian Berhasil!</DialogTitle>
+                <DialogTitle className="text-2xl mb-2">Pembayaran Berhasil!</DialogTitle>
                 <DialogDescription className="text-base mb-6">
-                  Tiket Anda telah berhasil dipesan
+                  Tiket Anda telah berhasil dibeli
                 </DialogDescription>
 
                 <div className="bg-linear-to-br from-terracotta/10 to-brown/5 rounded-lg p-6 mb-6 text-left border border-terracotta/20">
@@ -501,7 +822,7 @@ const AgendaDetailPage = () => {
                 </div>
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-900">
-                  <p className="font-medium mb-1">E-Tiket Dikirim ke Email</p>
+                  <p className="font-medium mb-1">📧 E-Tiket Dikirim ke Email</p>
                   <p className="text-blue-700">
                     Silakan cek email Anda untuk mendapatkan e-tiket dan instruksi lebih lanjut.
                   </p>
