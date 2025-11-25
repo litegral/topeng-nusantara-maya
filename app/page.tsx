@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import localFont from 'next/font/local';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maltopia - Arsip Digital Topeng Malangan",
+  description: "Platform digital untuk melestarikan dan mendokumentasikan seni Topeng Malangan. Jelajahi katalog topeng, cerita rakyat, dan jadwal pertunjukan.",
+};
+
 
 const cinzelDecorative = localFont({
   src: [
