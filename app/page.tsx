@@ -53,7 +53,7 @@ const Index = () => {
       icon: Map,
       title: "Peta Sanggar",
       description: "Temukan lokasi sanggar dan acara budaya terdekat",
-      link: "/peta",
+      link: "/lokasi",
     },
   ];
 
