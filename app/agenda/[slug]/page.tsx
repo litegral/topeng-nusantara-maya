@@ -20,6 +20,8 @@ import {
     Minus,
     CheckCircle2,
     Users,
+    Copy,
+    Check,
 } from "lucide-react";
 import {
     Dialog,
@@ -52,6 +54,7 @@ const AgendaDetailPage = () => {
     const [paymentData, setPaymentData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [paymentError, setPaymentError] = useState("");
+    const [isCopied, setIsCopied] = useState(false);
 
     if (!event) {
         return (
@@ -177,6 +180,12 @@ const AgendaDetailPage = () => {
         } catch (error) {
             console.error('Error checking payment status:', error);
         }
+    };
+
+    const handleCopyVA = (vaNumber: string) => {
+        navigator.clipboard.writeText(vaNumber);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
     };
 
     const formatCurrency = (amount: number) => {
@@ -423,8 +432,8 @@ const AgendaDetailPage = () => {
                                                 key={index}
                                                 onClick={() => setSelectedTicketType(index)}
                                                 className={`flex items-center justify-between p-3 rounded-lg border-2 cursor-pointer transition-all ${selectedTicketType === index
-                                                        ? 'border-terracotta bg-terracotta/5'
-                                                        : 'border-border hover:border-terracotta/50'
+                                                    ? 'border-terracotta bg-terracotta/5'
+                                                    : 'border-border hover:border-terracotta/50'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
@@ -598,8 +607,8 @@ const AgendaDetailPage = () => {
                                                     setSelectedBank(bank as any);
                                                 }}
                                                 className={`p-3 rounded-lg border-2 text-center font-medium uppercase transition-all ${paymentType === 'bank_transfer' && selectedBank === bank
-                                                        ? 'border-terracotta bg-terracotta/5'
-                                                        : 'border-border hover:border-terracotta/50'
+                                                    ? 'border-terracotta bg-terracotta/5'
+                                                    : 'border-border hover:border-terracotta/50'
                                                     }`}
                                             >
                                                 {bank}
@@ -616,8 +625,8 @@ const AgendaDetailPage = () => {
                                             type="button"
                                             onClick={() => setPaymentType('gopay')}
                                             className={`p-3 rounded-lg border-2 text-center font-medium transition-all ${paymentType === 'gopay'
-                                                    ? 'border-terracotta bg-terracotta/5'
-                                                    : 'border-border hover:border-terracotta/50'
+                                                ? 'border-terracotta bg-terracotta/5'
+                                                : 'border-border hover:border-terracotta/50'
                                                 }`}
                                         >
                                             GoPay / QRIS
@@ -626,8 +635,8 @@ const AgendaDetailPage = () => {
                                             type="button"
                                             onClick={() => setPaymentType('shopeepay')}
                                             className={`p-3 rounded-lg border-2 text-center font-medium transition-all ${paymentType === 'shopeepay'
-                                                    ? 'border-terracotta bg-terracotta/5'
-                                                    : 'border-border hover:border-terracotta/50'
+                                                ? 'border-terracotta bg-terracotta/5'
+                                                : 'border-border hover:border-terracotta/50'
                                                 }`}
                                         >
                                             ShopeePay
@@ -684,13 +693,27 @@ const AgendaDetailPage = () => {
                                     <>
                                         <div className="bg-linear-to-br from-terracotta/10 to-brown/5 rounded-lg p-6 border border-terracotta/20">
                                             <h4 className="font-semibold mb-4 text-center">Nomor Virtual Account</h4>
-                                            <div className="bg-white rounded-lg p-4 mb-4">
+                                            <div className="bg-muted/30 rounded-lg p-4 mb-4 border border-border/50">
                                                 <p className="text-xs text-muted-foreground text-center mb-2">
                                                     {paymentData.va_numbers[0].bank.toUpperCase()}
                                                 </p>
-                                                <p className="text-2xl font-bold text-center tracking-wider">
-                                                    {paymentData.va_numbers[0].va_number}
-                                                </p>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <p className="text-2xl font-bold text-center tracking-wider">
+                                                        {paymentData.va_numbers[0].va_number}
+                                                    </p>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-8 w-8"
+                                                        onClick={() => handleCopyVA(paymentData.va_numbers[0].va_number)}
+                                                    >
+                                                        {isCopied ? (
+                                                            <Check className="h-4 w-4 text-green-600" />
+                                                        ) : (
+                                                            <Copy className="h-4 w-4 text-muted-foreground" />
+                                                        )}
+                                                    </Button>
+                                                </div>
                                             </div>
                                             <div className="flex justify-between items-center">
                                                 <span className="text-sm text-muted-foreground">Total Pembayaran</span>
@@ -732,7 +755,7 @@ const AgendaDetailPage = () => {
                                             </div>
                                         )}
 
-                                        <div className="flex justify-between items-center bg-white rounded-lg p-4 border">
+                                        <div className="flex justify-between items-center bg-muted/30 rounded-lg p-4 border border-border/50">
                                             <span className="text-sm text-muted-foreground">Total Pembayaran</span>
                                             <span className="text-xl font-bold text-terracotta">
                                                 {formatCurrency(parseInt(paymentData.gross_amount))}

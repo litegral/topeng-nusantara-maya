@@ -134,7 +134,7 @@ const LokasiDetail = () => {
                   )}
 
                   {/* Directions Button Overlay */}
-                  <div className="absolute bottom-4 right-4 z-1000">
+                  <div className="absolute bottom-4 right-4 z-40">
                     <Button
                       onClick={openDirections}
                       className="shadow-lg"

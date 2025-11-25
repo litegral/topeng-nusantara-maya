@@ -5,6 +5,28 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Globe, Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import localFont from 'next/font/local';
+
+const cinzelDecorative = localFont({
+    src: [
+        {
+            path: '../app/fonts/CinzelDecorative-Regular.ttf',
+            weight: '400',
+            style: 'normal',
+        },
+        {
+            path: '../app/fonts/CinzelDecorative-Bold.ttf',
+            weight: '700',
+            style: 'normal',
+        },
+        {
+            path: '../app/fonts/CinzelDecorative-Black.ttf',
+            weight: '900',
+            style: 'normal',
+        },
+    ],
+    variable: '--font-cinzel-decorative'
+})
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -52,14 +74,11 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
+        <nav className="fixed top-0 left-0 right-0 z-[1100] bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     <Link href="/" className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-linear-to-br from-terracotta to-gold rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-primary-foreground">M</span>
-                        </div>
-                        <span className="text-xl font-bold text-foreground">Maltopia</span>
+                        <span className={`text-2xl font-bold text-foreground ${cinzelDecorative.className}`}>Maltopia</span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -101,9 +120,8 @@ const Navbar = () => {
                                             <button
                                                 key={lang.code}
                                                 onClick={() => handleLangSelect(lang.code)}
-                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-sm hover:bg-muted transition-colors ${
-                                                    currentLang === lang.code ? "bg-muted font-medium" : ""
-                                                }`}
+                                                className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-sm hover:bg-muted transition-colors ${currentLang === lang.code ? "bg-muted font-medium" : ""
+                                                    }`}
                                             >
                                                 <span className="flex items-center gap-2">
                                                     <span>{lang.flag}</span>

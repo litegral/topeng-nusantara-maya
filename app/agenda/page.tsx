@@ -143,7 +143,7 @@ const AgendaPage = () => {
       <Navbar />
       <ChatbotWidget />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-30 pb-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">

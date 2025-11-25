@@ -66,7 +66,7 @@ const LokasiPage = () => {
       <Navbar />
       <ChatbotWidget />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-30 pb-16">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-8 animate-fade-in">
@@ -112,7 +112,7 @@ const LokasiPage = () => {
               )}
 
               {/* Legend overlay */}
-              <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm px-4 py-3 rounded-lg border shadow-lg z-[1000]">
+              <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm px-4 py-3 rounded-lg border shadow-lg z-40">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full bg-red-500" />
                   <span className="text-xs text-foreground">Sanggar</span>
