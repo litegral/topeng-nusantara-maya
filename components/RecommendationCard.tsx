@@ -38,7 +38,7 @@ export default function RecommendationCard({
         hasTriggered.current = true;
         fetchRecommendations(true); // true = auto-triggered (opens compact)
       }
-    }, 1000);
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, [isOpen]);
