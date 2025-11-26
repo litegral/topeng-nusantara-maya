@@ -117,7 +117,7 @@ const LokasiDetail = () => {
                     <MapContainer
                       center={coordinates as [number, number]}
                       zoom={15}
-                      style={{ height: "100%", width: "100%" }}
+                      style={{ height: "100%", width: "100%", zIndex: 0 }}
                       scrollWheelZoom={false}
                     >
                       <TileLayer
@@ -136,7 +136,7 @@ const LokasiDetail = () => {
                   )}
 
                   {/* Directions Button Overlay */}
-                  <div className="absolute bottom-4 right-4 z-40">
+                  <div className="absolute bottom-4 right-4 z-[1000]">
                     <Button
                       onClick={openDirections}
                       className="shadow-lg"
