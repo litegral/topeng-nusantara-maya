@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { sanggarData, eventData } from "@/data";
+import RecommendationCard from "@/components/RecommendationCard";
+import { ContextExtractor } from "@/lib/context-extractor";
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -33,6 +35,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-    return children;
+export default async function Layout({ children, params }: { children: React.ReactNode; params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const [type, idStr] = slug.split('-');
+    const id = parseInt(idStr);
+
+    let pageContext = null;
+
+    if (type === 'sanggar') {
+        const sanggar = sanggarData.find(s => s.id === id);
+        if (sanggar) {
+            pageContext = ContextExtractor.extractFromLokasi('sanggar', sanggar);
+        }
+    } else if (type === 'event') {
+        const event = eventData.find(e => e.id === id);
+        if (event) {
+            pageContext = ContextExtractor.extractFromLokasi('event', event);
+        }
+    }
+
+    return (
+        <>
+            {children}
+            {pageContext && <RecommendationCard context={pageContext} />}
+        </>
+    );
 }

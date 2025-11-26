@@ -15,6 +15,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { ArrowLeft, MapPin, Phone, Globe, Calendar, Clock, Ticket, Navigation, BookOpen, Scissors } from "lucide-react";
 import { eventData as allEvents, eventData, sanggarData } from "@/data";
 import "leaflet/dist/leaflet.css";
+import RecommendationCard from "@/components/RecommendationCard";
+import { ContextExtractor } from "@/lib/context-extractor";
 
 // Dynamically import map components to avoid SSR issues
 const MapContainer = dynamic(
@@ -96,6 +98,7 @@ const LokasiDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <ChatbotWidget />
+      <RecommendationCard context={ContextExtractor.extractFromLokasi(type as any, item)} />
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">

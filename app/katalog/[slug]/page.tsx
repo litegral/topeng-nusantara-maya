@@ -7,9 +7,11 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import RecommendationCard from "@/components/RecommendationCard";
 import ModelViewer from "@/components/ModelViewer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ContextExtractor } from "@/lib/context-extractor";
 
 // Data Definition
 const topengData = [
@@ -60,6 +62,7 @@ export default function TopengDetailPage({ params }: { params: Promise<{ slug: s
         <div className="min-h-screen bg-background">
             <Navbar />
             <ChatbotWidget />
+            <RecommendationCard context={ContextExtractor.extractFromKatalog(topeng)} />
 
             <main className="pt-24 pb-16">
                 <div className="container mx-auto px-4">
