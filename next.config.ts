@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "cdn.antaranews.com" },
       { protocol: "https", hostname: "s3.us-east-1.wasabisys.com" },
+      { protocol: "https", hostname: "malangpagi.com" },
+      { protocol: "https", hostname: "kecweleri.kendalkab.go.id" },
+
     ],
   },
 };

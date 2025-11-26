@@ -24,6 +24,8 @@ export interface Sanggar {
   specialty: string;
   openTime: string;
   description: string;
+  image?: string;
+  images?: string[];
   services?: SanggarServices;
   fullDescription?: string;
   coordinates: [number, number];
@@ -44,6 +46,12 @@ export const sanggarData: Sanggar[] = [
     specialty: "Panji & Klana",
     openTime: "Senin - Sabtu, 15:00 - 18:00",
     description: "Sanggar tertua di Malang dengan spesialisasi lakon Panji dan pengembangan topeng klasik",
+    image: "https://malangpagi.com/wp-content/uploads/2021/06/Padepokan-Asmorobangun.jpg",
+    images: [
+      "https://malangpagi.com/wp-content/uploads/2021/06/Padepokan-Asmorobangun.jpg",
+      "https://kecweleri.kendalkab.go.id/plugin/foto_berita/85455965884_122169315428185106_1613424604107241334_n.jpg",
+      "https://malangpagi.com/wp-content/uploads/2022/05/DKKM-Ngenep-3.jpg"
+    ],
     services: {
       tariCourse: true,
       topengWorkshop: true,
@@ -74,6 +82,12 @@ Sanggar ini juga aktif dalam kegiatan penelitian dan dokumentasi tari topeng Mal
     specialty: "Gunungsari & Ragil Kuning",
     openTime: "Selasa - Minggu, 14:00 - 17:00",
     description: "Fokus pada karakter putri dan pengajaran tari untuk anak-anak serta remaja",
+    image: "https://kecweleri.kendalkab.go.id/plugin/foto_berita/85455965884_122169315428185106_1613424604107241334_n.jpg",
+    images: [
+      "https://kecweleri.kendalkab.go.id/plugin/foto_berita/85455965884_122169315428185106_1613424604107241334_n.jpg",
+      "https://malangpagi.com/wp-content/uploads/2021/06/Padepokan-Asmorobangun.jpg",
+      "https://malangpagi.com/wp-content/uploads/2022/05/DKKM-Ngenep-3.jpg"
+    ],
     services: {
       tariCourse: true,
       topengWorkshop: false,
@@ -104,6 +118,12 @@ Sanggar ini juga rutin mengadakan pertunjukan bulanan sebagai ajang latihan untu
     specialty: "Ensemble & Festival",
     openTime: "Minggu, 10:00 - 15:00",
     description: "Sanggar komunitas yang aktif di festival dan kompetisi regional",
+    image: "https://malangpagi.com/wp-content/uploads/2022/05/DKKM-Ngenep-3.jpg",
+    images: [
+      "https://malangpagi.com/wp-content/uploads/2022/05/DKKM-Ngenep-3.jpg",
+      "https://malangpagi.com/wp-content/uploads/2021/06/Padepokan-Asmorobangun.jpg",
+      "https://kecweleri.kendalkab.go.id/plugin/foto_berita/85455965884_122169315428185106_1613424604107241334_n.jpg"
+    ],
     coordinates: [-7.9866, 112.7145],
     upcomingEvents: [
       { title: "Persiapan Festival Topeng", date: "Setiap Minggu" }

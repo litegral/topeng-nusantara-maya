@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -146,9 +147,18 @@ const LokasiPage = () => {
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="aspect-video bg-linear-to-br from-terracotta to-gold relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <MapPin className="h-16 w-16 text-cream/80" />
-                    </div>
+                    {sanggar.image ? (
+                      <Image
+                        src={sanggar.image}
+                        alt={sanggar.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <MapPin className="h-16 w-16 text-cream/80" />
+                      </div>
+                    )}
                     <Badge className="absolute top-3 left-3 bg-background/90 text-foreground">
                       Sanggar
                     </Badge>

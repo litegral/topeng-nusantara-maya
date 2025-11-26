@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,6 +11,7 @@ import ChatbotWidget from "@/components/ChatbotWidget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { ArrowLeft, MapPin, Phone, Globe, Calendar, Clock, Ticket, Navigation, BookOpen, Scissors } from "lucide-react";
 import { eventData as allEvents, eventData, sanggarData } from "@/data";
 import "leaflet/dist/leaflet.css";
@@ -393,6 +395,37 @@ const LokasiDetail = () => {
                         {(item as any).social}
                       </Button>
                     </div>
+                  </div>
+                )}
+
+                {/* Image Gallery Carousel */}
+                {isSanggar && sanggar && (sanggar as any).images && (sanggar as any).images.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-border">
+                    <h3 className="text-xl font-semibold text-foreground mb-4">
+                      Galeri Foto
+                    </h3>
+                    <Carousel className="w-full">
+                      <CarouselContent>
+                        {(sanggar as any).images.map((image: string, index: number) => (
+                          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                            <div className="p-1">
+                              <Card className="overflow-hidden p-0">
+                                <div className="aspect-video relative">
+                                  <Image
+                                    src={image}
+                                    alt={`${(sanggar as any).name} - Foto ${index + 1}`}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                </div>
+                              </Card>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="left-2" />
+                      <CarouselNext className="right-2" />
+                    </Carousel>
                   </div>
                 )}
               </CardContent>
