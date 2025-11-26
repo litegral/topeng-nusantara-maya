@@ -24,6 +24,8 @@ export interface Event {
   registrationUrl: string | null;
   availableTickets: number;
   ticketTypes: TicketType[];
+  image?: string;
+  images?: string[];
 }
 
 export const eventData: Event[] = [
@@ -53,6 +55,12 @@ Festival ini juga menjadi ajang kompetisi bergengsi bagi sanggar-sanggar untuk m
     ticketTypes: [
       { name: "Reguler", price: 50000 },
       { name: "VIP", price: 100000 },
+    ],
+    image: "https://kabarbaik.co/wp-content/uploads/2025/11/WhatsApp-Image-2025-11-09-at-15.01.23-1.jpeg",
+    images: [
+      "https://images.unsplash.com/photo-1555992457-f50e70efbd45?w=800",
+      "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=800",
+      "https://images.unsplash.com/photo-1583521214690-73421a1829a9?w=800"
     ]
   },
   {
@@ -80,6 +88,12 @@ Setiap peserta akan membawa pulang satu topeng hasil karya sendiri. Workshop ini
     availableTickets: 30,
     ticketTypes: [
       { name: "Workshop + Material", price: 150000 },
+    ],
+    image: "https://img.antarafoto.com/cache/1200x799/2023/06/01/pelatihan-melukis-topeng-suvenir-16qvf-dom.jpg",
+    images: [
+      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
+      "https://images.unsplash.com/photo-1561835491-ed2567d96913?w=800",
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800"
     ]
   },
   {
@@ -108,6 +122,12 @@ Suasana yang informal dan ramah membuat acara ini cocok untuk seluruh keluarga. 
     ticketTypes: [
       { name: "Umum", price: 25000 },
       { name: "Pelajar", price: 15000 },
+    ],
+    image: "https://cdn.antaranews.com/cache/1200x800/2024/12/15/8759FB08-0462-447F-86D2-4E6F303FD243.jpg",
+    images: [
+      "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800",
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
+      "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800"
     ]
   },
   {
@@ -135,6 +155,12 @@ Setiap peserta akan mendapatkan modul pembelajaran dan kesempatan untuk terus be
     availableTickets: 25,
     ticketTypes: [
       { name: "Pemula", price: 100000 },
+    ],
+    image: "https://img.antarafoto.com/cache/1200x799/2023/06/01/pelatihan-melukis-topeng-suvenir-16qvf-dom.jpg",
+    images: [
+      "https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?w=800",
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800",
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800"
     ]
   },
   {
@@ -163,6 +189,12 @@ Cocok untuk pelajar, peneliti, dan siapa saja yang ingin mengenal kekayaan buday
     ticketTypes: [
       { name: "Umum", price: 20000 },
       { name: "Pelajar", price: 10000 },
+    ],
+    image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800",
+    images: [
+      "https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800",
+      "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=800",
+      "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800"
     ]
   },
   {
@@ -190,6 +222,12 @@ Acara ini gratis dan tidak memerlukan pendaftaran sebelumnya. Cocok untuk siapa 
     availableTickets: 100,
     ticketTypes: [
       { name: "Gratis", price: 0 },
+    ],
+    image: "https://cdn.antaranews.com/cache/730x487/2021/03/27/Festival-Tari-Topeng-2021-260321-abs-1.jpg",
+    images: [
+      "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800",
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800",
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800"
     ]
   },
   {
@@ -218,6 +256,12 @@ Acara ini dilengkapi dengan terjemahan bahasa Indonesia untuk memudahkan pemaham
     ticketTypes: [
       { name: "Reguler", price: 35000 },
       { name: "VIP", price: 75000 },
+    ],
+    image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
+    images: [
+      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
+      "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
+      "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800"
     ]
   }
 ];

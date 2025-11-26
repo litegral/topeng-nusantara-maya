@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
@@ -235,10 +236,19 @@ const AgendaPage = () => {
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="aspect-video bg-linear-to-br from-gold to-cream relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <CalendarIcon className="h-16 w-16 text-brown/80" />
-                    </div>
-                    <Badge className="absolute top-3 left-3 bg-background/90 text-foreground">
+                    {event.image ? (
+                      <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <CalendarIcon className="h-16 w-16 text-brown/80" />
+                      </div>
+                    )}
+                    <Badge className="absolute top-3 left-3 bg-background/90 text-foreground z-10">
                       {event.eventType}
                     </Badge>
                   </div>

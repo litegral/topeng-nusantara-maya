@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ChatbotWidget from "@/components/ChatbotWidget";
@@ -10,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import {
     ArrowLeft,
     MapPin,
@@ -388,6 +390,37 @@ const AgendaDetailPage = () => {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Image Gallery Carousel */}
+                                {event.images && event.images.length > 0 && (
+                                    <div className="mt-6 pt-6 border-t border-border">
+                                        <h3 className="text-xl font-semibold text-foreground mb-4">
+                                            Galeri Foto
+                                        </h3>
+                                        <Carousel className="w-full">
+                                            <CarouselContent>
+                                                {event.images.map((image: string, index: number) => (
+                                                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                                                        <div className="p-1">
+                                                            <Card className="overflow-hidden p-0">
+                                                                <div className="aspect-video relative">
+                                                                    <Image
+                                                                        src={image}
+                                                                        alt={`${event.title} - Foto ${index + 1}`}
+                                                                        fill
+                                                                        className="object-cover"
+                                                                    />
+                                                                </div>
+                                                            </Card>
+                                                        </div>
+                                                    </CarouselItem>
+                                                ))}
+                                            </CarouselContent>
+                                            <CarouselPrevious className="left-2" />
+                                            <CarouselNext className="right-2" />
+                                        </Carousel>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </div>
