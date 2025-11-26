@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ShortStory from "@/components/ShortStory";
 import BookStory from "@/components/BookStory";
-import RecommendationCard from "@/components/RecommendationCard";
-import { ContextExtractor } from "@/lib/context-extractor";
+
+
 
 const stories = [
     {
@@ -179,7 +179,7 @@ export default function CeritaDetail() {
         <div className="min-h-screen bg-linear-to-br from-brown/5 via-background to-terracotta/5">
             <Navbar />
             <ChatbotWidget />
-            <RecommendationCard context={ContextExtractor.extractFromArsip(story)} />
+
 
             <main className="pt-24 pb-16">
                 <div className="container mx-auto px-4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export default function RecommendationCard({
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [hasTriggered, setHasTriggered] = useState(false);
+  const hasTriggered = useRef(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -31,15 +31,17 @@ export default function RecommendationCard({
 
   // Auto-trigger logic
   useEffect(() => {
-    if (hasTriggered || isOpen) return; // Don't auto-trigger if already open or triggered
+    if (hasTriggered.current || isOpen) return; // Don't auto-trigger if already open or triggered
 
     const timer = setTimeout(() => {
-      setHasTriggered(true);
-      fetchRecommendations(true); // true = auto-triggered (opens compact)
-    }, 3000);
+      if (!hasTriggered.current) {
+        hasTriggered.current = true;
+        fetchRecommendations(true); // true = auto-triggered (opens compact)
+      }
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [hasTriggered, isOpen]);
+  }, [isOpen]);
 
   const fetchRecommendations = async (isAutoTrigger = false) => {
     setIsLoading(true);
@@ -80,6 +82,7 @@ export default function RecommendationCard({
   };
 
   const handleOpenFull = () => {
+    hasTriggered.current = true; // Prevent auto-trigger if user manually opens
     setIsCompact(false);
     setIsOpen(true);
     if (recommendations.length === 0 && !isLoading) {
